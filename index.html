@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,85 +7,59 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
         }
-
-        h1 {
+        .countdown {
             font-size: 2em;
-            margin-top: 50px;
-        }
-
-        #countdown {
-            font-size: 3em;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 50px auto;
-            display: inline-block;
-            background-color: grey;
-            color: white;
-        }
-
-        /* Пример изменения оттенка по месяцам */
-        .month-1 { background-color: #d3d3d3; }  /* Январь */
-        .month-2 { background-color: #b0b0b0; }  /* Февраль */
-        .month-3 { background-color: #a0a0a0; }  /* Март */
-        .month-4 { background-color: #909090; }  /* Апрель */
-        .month-5 { background-color: #808080; }  /* Май */
-        .month-6 { background-color: #707070; }  /* Июнь */
-        .month-7 { background-color: #606060; }  /* Июль */
-        .month-8 { background-color: #505050; }  /* Август */
-        .month-9 { background-color: #404040; }  /* Сентябрь */
-        .month-10 { background-color: #303030; } /* Октябрь */
-        .month-11 { background-color: #202020; } /* Ноябрь */
-        .month-12 { background-color: #101010; } /* Декабрь */
-
-        /* Красный цвет в последние дни */
-        .last-days {
-            background-color: red;
+            color: gray;
         }
     </style>
 </head>
 <body>
 
-<h1>Обратный отсчет до CFA 1</h1>
-<div id="countdown"></div>
+<div id="countdown" class="countdown">Обратный отсчет до CFA 1</div>
 
 <script>
     function updateCountdown() {
-        const targetDate = new Date("February 21, 2025 00:00:00").getTime();
+        const targetDate = new Date('February 21, 2025 00:00:00').getTime();
         const now = new Date().getTime();
         const distance = targetDate - now;
 
-        // Вычисление дней, часов, минут и секунд
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Отображение обратного отсчета
-        const countdownElement = document.getElementById("countdown");
-        countdownElement.innerHTML = days + "д " + hours + "ч " + minutes + "м " + seconds + "с ";
+        const countdownElement = document.getElementById('countdown');
 
-        // Определение текущего месяца и изменение оттенка цвета
-        const currentMonth = new Date().getMonth() + 1;
-        countdownElement.className = `month-${currentMonth}`;
+        // Изменение цвета по мере приближения к дате
+        const daysUntilChange = Math.floor((targetDate - new Date('February 21, 2024').getTime()) / (1000 * 60 * 60 * 24));
+        const monthsToGo = Math.floor((distance / (1000 * 60 * 60 * 24 * 30)));
 
-        // Если осталось меньше 10 дней, цвет меняется на красный
-        if (days <= 10) {
-            countdownElement.classList.add("last-days");
+        let color = `rgb(${255 - monthsToGo * 20}, ${255 - monthsToGo * 10}, ${255 - monthsToGo * 5})`;
+        if (distance < 30 * 24 * 60 * 60 * 1000) {  // Меняется на красный в последний месяц
+            color = 'red';
         }
 
-        // Если время истекло
+        countdownElement.style.color = color;
+
+        countdownElement.innerHTML = `
+            ${days} день${days !== 1 ? 'ей' : ''}, 
+            ${hours} час${hours !== 1 ? 'ов' : ''}, 
+            ${minutes} минут${minutes !== 1 ? 'ы' : ''}, 
+            ${seconds} секунд${seconds !== 1 ? 'ы' : ''}
+        `;
+
         if (distance < 0) {
             clearInterval(interval);
-            countdownElement.innerHTML = "CFA 1 начался!";
-            countdownElement.style.backgroundColor = "green";
+            countdownElement.innerHTML = "Событие началось!";
         }
     }
 
-    // Обновление каждую секунду
     const interval = setInterval(updateCountdown, 1000);
 </script>
 
