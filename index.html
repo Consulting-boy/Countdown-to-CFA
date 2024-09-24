@@ -11,11 +11,11 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: white; /* Белый фон */
         }
         .countdown {
             font-size: 2em;
-            color: gray;
+            color: black; /* Начальный цвет текста - черный */
         }
     </style>
 </head>
@@ -36,28 +36,29 @@
 
         const countdownElement = document.getElementById('countdown');
 
-        // Изменение цвета по мере приближения к дате
-        const daysUntilChange = Math.floor((targetDate - new Date('February 21, 2024').getTime()) / (1000 * 60 * 60 * 24));
-        const monthsToGo = Math.floor((distance / (1000 * 60 * 60 * 24 * 30)));
-
-        let color = `rgb(${255 - monthsToGo * 20}, ${255 - monthsToGo * 10}, ${255 - monthsToGo * 5})`;
-        if (distance < 30 * 24 * 60 * 60 * 1000) {  // Меняется на красный в последний месяц
-            color = 'red';
-        }
-
+        // Изменение цвета текста по мере приближения к дате
+        const totalDays = Math.floor((targetDate - new Date().getTime()) / (1000 * 60 * 60 * 24));
+        const daysPassed = totalDays - days;
+        const redValue = Math.min(255, Math.floor((daysPassed / totalDays) * 255)); // от 0 до 255
+        const color = `rgb(${redValue}, 0, 0)`; // Цвет от черного до красного
         countdownElement.style.color = color;
 
         countdownElement.innerHTML = `
-            ${days} день${days !== 1 ? 'ей' : ''}, 
-            ${hours} час${hours !== 1 ? 'ов' : ''}, 
-            ${minutes} минут${minutes !== 1 ? 'ы' : ''}, 
-            ${seconds} секунд${seconds !== 1 ? 'ы' : ''}
+            ${days} ${declension(days, ['день', 'дня', 'дней'])} 
+            ${hours} ${declension(hours, ['час', 'часа', 'часов'])} 
+            ${minutes} ${declension(minutes, ['минута', 'минуты', 'минут'])} 
+            ${seconds} ${declension(seconds, ['секунда', 'секунды', 'секунд'])}
         `;
 
         if (distance < 0) {
             clearInterval(interval);
             countdownElement.innerHTML = "Событие началось!";
         }
+    }
+
+    function declension(number, titles) {
+        let cases = [2, 0, 1, 1, 1, 2];
+        return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
     }
 
     const interval = setInterval(updateCountdown, 1000);
