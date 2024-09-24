@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обратный отсчет до CFA 1</title>
+    <title>Отсчет до сдачи экзамена CFA 1</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             background-color: white; /* Белый фон */
         }
+        h1 {
+            font-size: 2em;
+            color: black;
+        }
         .countdown {
             font-size: 2em;
-            color: black; /* Начальный цвет текста - черный */
+            display: flex;
+            gap: 10px;
+        }
+        .time-section {
+            color: black;
+        }
+        .time-number {
+            color: black; /* Начальный цвет цифр - черный */
         }
     </style>
 </head>
 <body>
 
-<div id="countdown" class="countdown">Обратный отсчет до CFA 1</div>
+<h1>Отсчет до сдачи экзамена CFA 1</h1>
+<div id="countdown" class="countdown"></div>
 
 <script>
     function updateCountdown() {
@@ -36,18 +49,25 @@
 
         const countdownElement = document.getElementById('countdown');
 
-        // Изменение цвета текста по мере приближения к дате
+        // Изменение цвета цифр по мере приближения к дате
         const totalDays = Math.floor((targetDate - new Date().getTime()) / (1000 * 60 * 60 * 24));
         const daysPassed = totalDays - days;
         const redValue = Math.min(255, Math.floor((daysPassed / totalDays) * 255)); // от 0 до 255
-        const color = `rgb(${redValue}, 0, 0)`; // Цвет от черного до красного
-        countdownElement.style.color = color;
+        const color = `rgb(${redValue}, 0, 0)`; // Цвет цифр от черного до красного
 
         countdownElement.innerHTML = `
-            ${days} ${declension(days, ['день', 'дня', 'дней'])} 
-            ${hours} ${declension(hours, ['час', 'часа', 'часов'])} 
-            ${minutes} ${declension(minutes, ['минута', 'минуты', 'минут'])} 
-            ${seconds} ${declension(seconds, ['секунда', 'секунды', 'секунд'])}
+            <span class="time-section">
+                <span class="time-number" style="color: ${color};">${days}</span> ${declension(days, ['день', 'дня', 'дней'])}
+            </span>
+            <span class="time-section">
+                <span class="time-number" style="color: ${color};">${hours}</span> ${declension(hours, ['час', 'часа', 'часов'])}
+            </span>
+            <span class="time-section">
+                <span class="time-number" style="color: ${color};">${minutes}</span> ${declension(minutes, ['минута', 'минуты', 'минут'])}
+            </span>
+            <span class="time-section">
+                <span class="time-number" style="color: ${color};">${seconds}</span> ${declension(seconds, ['секунда', 'секунды', 'секунд'])}
+            </span>
         `;
 
         if (distance < 0) {
